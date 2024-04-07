@@ -2,14 +2,27 @@
 
 namespace Paytic\Smartfintech;
 
+
 class SmartfintechClient
 {
-    public const SANDBOX_URL = 'https://mtls.sandbox.pay.smartfintech.eu/gateway';
+    use Client\HasApiEndpoints;
+    use Client\HasHttpClientTrait;
+    use Client\HasRequestsTrait;
 
-    public const LIVE_URL = 'https://mtls.pay.smartfintech.eu/gateway';
+    public const SANDBOX_URL = 'https://mtls.sandbox.pay.smartfintech.eu';
 
-    public function authenticate()
+    public const LIVE_URL = 'https://mtls.pay.smartfintech.eu';
+
+    protected $isSandbox = true;
+
+    public function isSandbox(bool $isSandbox = null)
     {
-        // Authenticate the user
+        if ($isSandbox === null) {
+            return $this->isSandbox;
+        }
+        $this->isSandbox = $isSandbox;
+        $this->initBaseUrl();
+        return $isSandbox;
     }
+
 }

@@ -7,17 +7,12 @@ use Paytic\Smartfintech\Tests\TestCase;
 
 class AuthenticationRequestTest extends TestCase
 {
-    public function test_create_from_string()
-    {
-        $request = AuthenticationRequest::create('client_id');
-        self::assertInstanceOf(AuthenticationRequest::class, $request);
-        self::assertSame('client_id', $request->client_id);
-    }
 
     public function test_create_from_array()
     {
         $request = AuthenticationRequest::create(
             [
+                'certificate' => 'certificate',
                 'client_id' => 'client_id',
                 'isLink2Pay' => false,
                 'flexibleURL' => false,
