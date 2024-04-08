@@ -3,11 +3,8 @@
 namespace Paytic\Smartfintech\Client;
 
 use Http\Client\Common\Plugin\AddHostPlugin;
-use Http\Client\Common\Plugin\AddPathPlugin;
-use Http\Discovery\Psr18ClientDiscovery;
 use Paytic\Smartfintech\HttpClient\ClientBuilder;
 use Paytic\Smartfintech\HttpClient\HasClientBuilder;
-use Psr\Http\Client\ClientInterface;
 
 trait HasHttpClientTrait
 {

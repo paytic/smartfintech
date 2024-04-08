@@ -2,8 +2,11 @@
 
 namespace Paytic\Smartfintech\HttpClient;
 
+use Exception;
+use finfo;
 use Http\Client\Exception\TransferException;
 use Http\Message\MultipartStream\MultipartStreamBuilder;
+use Paytic\Smartfintech\Api\AbstractBase\AbstractResponse;
 use Paytic\Smartfintech\Api\AbstractBase\BaseRequest;
 use Paytic\Smartfintech\Api\AbstractBase\BaseResponse;
 use Paytic\Smartfintech\Api\AbstractBase\ErrorResponse;
@@ -13,6 +16,16 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+use function array_filter;
+use function basename;
+use function class_exists;
+use function count;
+use function fopen;
+use function func_get_args;
+use function restore_error_handler;
+use function set_error_handler;
+use function sprintf;
+use const FILEINFO_MIME_TYPE;
 
 class RequestManager
 {
@@ -41,7 +54,7 @@ class RequestManager
                 $httpResponse = $this->getHttpClientBuilder()->getHttpClient()->sendRequest($httpRequest);
             }
         } catch (TransferException $e) {
-            throw new \Exception('Error while requesting data from gateway: ' . $e->getMessage(), $e->getCode(), $e);
+            throw new Exception('Error while requesting data from gateway: ' . $e->getMessage(), $e->getCode(), $e);
         }
 
         return $this->parseResponse($apiRequest, $httpResponse);
@@ -73,7 +86,7 @@ class RequestManager
      */
     public function post(string $uri, array $params = [], array $headers = [], array $files = [], array $uriParams = [])
     {
-        if (0 < \count($files)) {
+        if (0 < count($files)) {
             $builder = $this->createMultipartStreamBuilder($params, $files);
 //            $body = self::prepareMultipartBody($builder);
 //            $headers = self::addMultipartContentType($headers, $builder);
@@ -126,11 +139,11 @@ class RequestManager
      */
     private static function prepareUri(string $uri, array $query = []): string
     {
-        $query = \array_filter($query, function ($value): bool {
+        $query = array_filter($query, function ($value): bool {
             return null !== $value;
         });
 
-        return \sprintf('%s%s%s', self::URI_PREFIX, $uri, QueryStringBuilder::build($query));
+        return sprintf('%s%s%s', self::URI_PREFIX, $uri, QueryStringBuilder::build($query));
     }
 
 
@@ -166,7 +179,7 @@ class RequestManager
                 'headers' => [
                     ResponseParser::CONTENT_TYPE_HEADER => self::guessFileContentType($file),
                 ],
-                'filename' => \basename($file),
+                'filename' => basename($file),
             ]);
         }
 
@@ -191,17 +204,17 @@ class RequestManager
     private static function tryFopen(string $filename, string $mode)
     {
         $ex = null;
-        \set_error_handler(function () use ($filename, $mode, &$ex): void {
-            $ex = new RuntimeException(\sprintf(
+        set_error_handler(function () use ($filename, $mode, &$ex): void {
+            $ex = new RuntimeException(sprintf(
                 'Unable to open %s using mode %s: %s',
                 $filename,
                 $mode,
-                \func_get_args()[1]
+                func_get_args()[1]
             ));
         });
 
-        $handle = \fopen($filename, $mode);
-        \restore_error_handler();
+        $handle = fopen($filename, $mode);
+        restore_error_handler();
 
         if (null !== $ex) {
             throw $ex;
@@ -211,13 +224,13 @@ class RequestManager
         return $handle;
     }
 
-    protected function parseResponse(BaseRequest $request, $httpResponse): BaseResponse
+    protected function parseResponse(BaseRequest $request, $httpResponse): AbstractResponse
     {
-        if ($httpResponse->getStatusCode() != 200) {
-            return ErrorResponse::create($httpResponse);
-        }
-        $class = $request->getResponseClass();
-        return $class::create($httpResponse);
+        $responseClass  = ($httpResponse->getStatusCode() != 200)
+            ? ErrorResponse::class
+            : $request->getResponseClass();
+        $responseParser  = new ResponseParser($httpResponse, $responseClass);
+        return $responseParser->parse();
     }
 
     /**
@@ -229,11 +242,11 @@ class RequestManager
      */
     private static function guessFileContentType(string $file): string
     {
-        if (!\class_exists(\finfo::class, false)) {
+        if (!class_exists(finfo::class, false)) {
             return ResponseParser::STREAM_CONTENT_TYPE;
         }
 
-        $finfo = new \finfo(\FILEINFO_MIME_TYPE);
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
         $type = $finfo->file($file);
 
         return false !== $type ? $type : ResponseParser::STREAM_CONTENT_TYPE;

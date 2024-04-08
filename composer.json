@@ -18,7 +18,6 @@
       "Paytic\\Smartfintech\\Tests\\": "tests/src"
     }
   },
-
   "require": {
     "ext-json": "*",
     "ext-iconv": "*",
@@ -34,7 +33,9 @@
     "php-http/discovery": "^1.14",
     "php-http/multipart-stream-builder": "^1.3",
     "symfony/dotenv": "^6.0|^7.0",
-    "symfony/http-client": "^7.0",
+    "symfony/http-client": "^6.0|^7.0",
+    "symfony/serializer": "^6.0|^7.0",
+    "symfony/property-access": "^6.0|^7.0",
     "nyholm/psr7": "^1.8"
   },
   "require-dev": {

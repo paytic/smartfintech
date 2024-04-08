@@ -17,11 +17,11 @@ class AuthenticationRequest extends BaseRequest
 
     public string $client_id;
 
-    public bool $isLink2Pay = true;
+    public ?bool $isLink2Pay = null;
 
-    public bool $flexibleURL = true;
+    public ?bool $flexibleURL = null;
 
-    public bool $isHeadless = true;
+    public ?bool $isHeadless = null;
 
     /**
      * @param string $client_id
@@ -75,7 +75,7 @@ class AuthenticationRequest extends BaseRequest
 
     protected function generateResponseClass(): string
     {
-        return AuthResponse::class;
+        return AuthenticationResponse::class;
     }
 
     protected function generateSslFile($file)
