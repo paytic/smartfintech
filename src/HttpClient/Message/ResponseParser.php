@@ -62,7 +62,6 @@ class ResponseParser
     protected function parseHttpResponse()
     {
         $this->apiResponse->status = $this->httpResponse->getStatusCode();
-        $this->apiResponse->messageStatus = $this->httpResponse->getReasonPhrase();
         if (method_exists($this->apiResponse, 'populateFromHttpResponse')) {
             $this->apiResponse->populateFromHttpResponse($this->httpResponse);
         }

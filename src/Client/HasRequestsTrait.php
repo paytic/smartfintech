@@ -2,8 +2,8 @@
 
 namespace Paytic\Smartfintech\Client;
 
-use Paytic\Smartfintech\Api\AbstractBase\BaseRequest;
-use Paytic\Smartfintech\Api\AbstractBase\BaseResponse;
+use Paytic\Smartfintech\Api\AbstractBase\AbstractRequest;
+use Paytic\Smartfintech\Api\AbstractBase\AbstractResponse;
 use Paytic\Smartfintech\HttpClient\RequestManager;
 
 trait HasRequestsTrait
@@ -18,7 +18,7 @@ trait HasRequestsTrait
 
         return $this->requestManager;
     }
-    public function sendApiRequest(BaseRequest $request): BaseResponse
+    public function sendApiRequest(AbstractRequest $request): AbstractResponse
     {
         return $this->getRequestManager()->sendApiRequest($request);
     }

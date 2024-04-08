@@ -7,7 +7,7 @@ use finfo;
 use Http\Client\Exception\TransferException;
 use Http\Message\MultipartStream\MultipartStreamBuilder;
 use Paytic\Smartfintech\Api\AbstractBase\AbstractResponse;
-use Paytic\Smartfintech\Api\AbstractBase\BaseRequest;
+use Paytic\Smartfintech\Api\AbstractBase\AbstractRequest;
 use Paytic\Smartfintech\Api\AbstractBase\BaseResponse;
 use Paytic\Smartfintech\Api\AbstractBase\ErrorResponse;
 use Paytic\Smartfintech\HttpClient\Message\ResponseParser;
@@ -44,7 +44,7 @@ class RequestManager
         $this->httpClientBuilder = $httpClientBuilder;
     }
 
-    public function sendApiRequest(BaseRequest $apiRequest): BaseResponse
+    public function sendApiRequest(AbstractRequest $apiRequest): AbstractResponse
     {
         try {
             if (method_exists($apiRequest, 'send')) {
@@ -77,21 +77,22 @@ class RequestManager
 
     /**
      * @param string $uri
-     * @param array<string,mixed> $params
+     * @param array|string $body
      * @param array<string,string> $headers
      * @param array<string,string> $files
      * @param array<string,mixed> $uriParams
      *
      * @return mixed
+     * @throws \Http\Client\Exception
      */
-    public function post(string $uri, array $params = [], array $headers = [], array $files = [], array $uriParams = [])
+    public function post(string $uri, array|string $body = [], array $headers = [], array $files = [], array $uriParams = [])
     {
         if (0 < count($files)) {
-            $builder = $this->createMultipartStreamBuilder($params, $files);
+            $builder = $this->createMultipartStreamBuilder($body, $files);
 //            $body = self::prepareMultipartBody($builder);
 //            $headers = self::addMultipartContentType($headers, $builder);
         } else {
-            $body = $this->generateBodyStreamFromData($params, $this->getHttpClientBuilder()->getStreamFactory());
+            $body = $this->generateBodyStreamFromData($body, $this->getHttpClientBuilder()->getStreamFactory());
         }
 
         return $this->getHttpClientBuilder()->getHttpClient()->post(
@@ -101,7 +102,7 @@ class RequestManager
         );
     }
 
-    protected function prepareRequest(BaseRequest $request)
+    protected function prepareRequest(AbstractRequest $request)
     {
         return $this->createRequest(
             $request->getMethod(),
@@ -154,6 +155,9 @@ class RequestManager
         }
         if ($streamFactory && is_array($bodyData)) {
             return $streamFactory->createStream(http_build_query($bodyData));
+        }
+        if (is_string($bodyData)) {
+            return $streamFactory->createStream($bodyData);
         }
         return null;
     }
@@ -224,7 +228,7 @@ class RequestManager
         return $handle;
     }
 
-    protected function parseResponse(BaseRequest $request, $httpResponse): AbstractResponse
+    protected function parseResponse(AbstractRequest $request, $httpResponse): AbstractResponse
     {
         $responseClass  = ($httpResponse->getStatusCode() != 200)
             ? ErrorResponse::class

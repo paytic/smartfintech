@@ -2,10 +2,10 @@
 
 namespace Paytic\Smartfintech\Api\Authentication;
 
-use Paytic\Smartfintech\Api\AbstractBase\BaseRequest;
+use Paytic\Smartfintech\Api\AbstractBase\AbstractRequest;
 use Paytic\Smartfintech\HttpClient\RequestManager;
 
-class AuthenticationRequest extends BaseRequest
+class AuthenticationRequest extends AbstractRequest
 {
     public const PATH = '/authenticate/rest/api/token';
 
@@ -32,29 +32,25 @@ class AuthenticationRequest extends BaseRequest
         $this->client_id = $client_id;
     }
 
-    public static function create(array|self $params = []): static
+    protected static function createParseConstructorParams(array &$params = []): array
     {
-        if ($params instanceof self) {
-            return $params;
-        }
+        $constructorParams = parent::createParseConstructorParams($params);
 
         $client_id = $params['client_id'] ?? null;
         if (empty($client_id)) {
             throw new \Exception("Missing client_id");
         }
         unset($params['client_id']);
+        $constructorParams['client_id'] = $client_id;
 
         $certificate = $params['certificate'] ?? null;
         if (empty($certificate)) {
             throw new \Exception("Missing certificate");
         }
         unset($params['certificate']);
+        $constructorParams['certificate'] = $certificate;
 
-        $request = new static($certificate, $client_id);
-        foreach ($params as $name => $value) {
-            $request->$name = $value;
-        }
-        return $request;
+        return $constructorParams;
     }
 
     public function send(RequestManager $manager)
