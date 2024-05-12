@@ -3,13 +3,13 @@
 namespace Paytic\Smartfintech\Api\Client;
 
 use Paytic\Smartfintech\Api\AbstractBase\AbstractRequest;
+use Paytic\Smartfintech\Api\AbstractBase\Behaviours\RequestHasContract;
 use Paytic\Smartfintech\Models\Contract;
 
 class ContractDisplayRequest extends AbstractRequest
 {
+    use RequestHasContract;
     protected $platform = null;
-
-    protected ?Contract $contract = null;
 
     protected static function createValidateParams(array $params = []): void
     {
@@ -17,12 +17,7 @@ class ContractDisplayRequest extends AbstractRequest
         if (!isset($params['platform'])) {
             throw new \Exception('platform parameter not set');
         }
-        if (!isset($params['contract'])) {
-            throw new \Exception('contract parameter must be a string');
-        }
-        if (!($params['contract'] instanceof Contract)) {
-            throw new \Exception('platform parameter must be an instance of Contract');
-        }
+        self::validateParamContract($params);
     }
 
     public function displayHtml(): string
@@ -31,14 +26,14 @@ class ContractDisplayRequest extends AbstractRequest
             . $this->generateScript();
     }
 
-    protected function generateIframe(): string
+    public function generateIframe(): string
     {
         return '<iframe src="https://sandbox.pay.smartfintech.eu/' . $this->platform . '/contract"'
             . ' title="T&C"  id="my-iframe"'
-            . ' style="width: 90vw; height: 90vh;"></iframe>';
+            . ' style="width: 100%; height: 500px;border: 1px solid #cacaca">Loading contract ...</iframe>';
     }
 
-    protected function generateScript()
+    public function generateScript()
     {
         return '<script>
 const intervalID = setInterval(

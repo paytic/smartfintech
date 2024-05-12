@@ -239,4 +239,29 @@ class Contract
     {
         $this->logo = $logo;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'cifCnp' => $this->cifCnp,
+            'tradeRegisterNumber' => $this->tradeRegisterNumber,
+            'officeAddress' => $this->officeAddress,
+            'county' => $this->county,
+            'bank' => $this->bank,
+            'iban' => $this->iban,
+            'contactPerson' => $this->contactPerson,
+            'contactEmail' => $this->contactEmail,
+            'contactPhone' => $this->contactPhone,
+            'role' => $this->role,
+            'vatPayer' => $this->vatPayer,
+            'vatRate' => $this->vatRate,
+            'nonpayingVAT' => $this->nonpayingVAT,
+            'persAcceptTCSF' => $this->persAcceptTCSF,
+            'dataAcceptTCSF' => $this->dataAcceptTCSF,
+            'correspondanceAddress' => $this->correspondanceAddress,
+            'platformURL' => $this->platformURL,
+            'logo' => $this->logo,
+        ];
+    }
 }

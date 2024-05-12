@@ -2,7 +2,7 @@
 
 namespace Paytic\Smartfintech\Tests\Endpoints\Authentication;
 
-use Paytic\Smartfintech\Endpoints\Authentication\AuthenticationRequest;
+use Paytic\Smartfintech\Api\Authentication\AuthenticationRequest;
 use Paytic\Smartfintech\Tests\TestCase;
 
 class AuthenticationRequestTest extends TestCase

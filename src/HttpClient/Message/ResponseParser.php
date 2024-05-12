@@ -59,7 +59,7 @@ class ResponseParser
         return $this->apiResponse;
     }
 
-    protected function parseHttpResponse()
+    protected function parseHttpResponse(): void
     {
         $this->apiResponse->status = $this->httpResponse->getStatusCode();
         if (method_exists($this->apiResponse, 'populateFromHttpResponse')) {
@@ -67,7 +67,7 @@ class ResponseParser
         }
     }
 
-    protected function parseHttpResponseBody()
+    protected function parseHttpResponseBody(): void
     {
         $body = $this->httpResponse->getBody()->getContents();
         if ($body === null) {
