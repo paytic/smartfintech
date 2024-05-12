@@ -101,6 +101,24 @@ abstract class AbstractRequest
         return BaseResponse::class;
     }
 
+    protected function sendGet(
+        RequestManager $manager,
+        string         $uri = null,
+        array          $params = [],
+        array          $headers = null)
+    {
+        if ($uri === null) {
+            $uri = $this->getUri();
+        }
+
+        $headers = $headers ?? $this->getHeaders();
+        return $manager->get(
+            $uri,
+            $params,
+            $headers,
+        );
+    }
+
     protected function sendPost(
         RequestManager $manager,
         string         $uri = null,

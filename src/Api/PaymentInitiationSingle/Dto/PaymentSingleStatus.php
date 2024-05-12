@@ -1,11 +1,11 @@
 <?php
 
-namespace Paytic\Smartfintech\Api\SinglePaymentInitiation\Dto;
+namespace Paytic\Smartfintech\Api\PaymentInitiationSingle\Dto;
 
 /**
  * @see https://docs.pay.smartfintech.eu/#tag/Step-3-Payment-Status/operation/paymentStatusUsingGET
  */
-class SinglePaymentStatus
+class PaymentSingleStatus
 {
     /**
      * SmartPay internal status, generated at the payment initiation before reaching the bank.

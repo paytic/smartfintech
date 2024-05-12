@@ -1,11 +1,11 @@
 <?php
 
-namespace Paytic\Smartfintech\Api\SinglePaymentInitiation;
+namespace Paytic\Smartfintech\Api\PaymentInitiationSingle;
 
 use Paytic\Smartfintech\Api\AbstractBase\BaseResponse;
 use Paytic\Smartfintech\Api\Authentication\Dto\AuthResponse;
 
-class SinglePaymentInitiationResponse extends BaseResponse
+class PaymentInitiationSingleResponse extends BaseResponse
 {
     public ?string $redirectUri = null;
 }

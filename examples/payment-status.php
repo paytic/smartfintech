@@ -3,6 +3,7 @@
 use Paytic\Smartfintech\Api\Authentication\AuthenticationRequest;
 use Paytic\Smartfintech\Api\PaymentInitiationSingle\PaymentInitiationSingleRequest;
 use Paytic\Smartfintech\Api\PaymentInitiationSingle\PaymentInitiationSingleResponse;
+use Paytic\Smartfintech\Api\PaymentStatus\PaymentStatusRequest;
 use Paytic\Smartfintech\SmartfintechClient;
 
 require __DIR__ . '/_init.php';
@@ -19,17 +20,12 @@ $response = $client->authenticate($request);
 $accessToken = $response->result->access_token;
 $paymentId = $response->result->paymentId;
 
-$pisRequest = PaymentInitiationSingleRequest::create([
+$pisRequest = PaymentStatusRequest::create([
     'accessToken' => $accessToken,
     'paymentId' => $paymentId,
-    'creditorName' => 'John Doe',
-    'creditorIban' => 'RO09PORL7789778256833565',
-    'amount' => 10.23,
-    'details' => 'Test payment',
-    'redirectURL' => 'https://example.com/redirect',
-    'psuIntermediarId' => microtime(),
 ]);
-$response = $client->paymentInitiationSingle($pisRequest);
+$response = $client->paymentStatus($pisRequest);
+var_dump($response);
 
 if ($response instanceof PaymentInitiationSingleResponse) {
     echo 'Payment initiated successfully! <br />';

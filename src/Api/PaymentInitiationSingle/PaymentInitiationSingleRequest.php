@@ -1,11 +1,11 @@
 <?php
 
-namespace Paytic\Smartfintech\Api\SinglePaymentInitiation;
+namespace Paytic\Smartfintech\Api\PaymentInitiationSingle;
 
 use Paytic\Smartfintech\Api\AbstractBase\AbstractRequestWithToken;
 use Paytic\Smartfintech\HttpClient\RequestManager;
 
-class SinglePaymentInitiationRequest extends AbstractRequestWithToken
+class PaymentInitiationSingleRequest extends AbstractRequestWithToken
 {
     public const PATH = '/core/rest/api/initPayment';
 
@@ -80,7 +80,7 @@ class SinglePaymentInitiationRequest extends AbstractRequestWithToken
     }
     protected function generateResponseClass(): string
     {
-        return SinglePaymentInitiationResponse::class;
+        return PaymentInitiationSingleResponse::class;
     }
 
 }

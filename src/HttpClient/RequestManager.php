@@ -67,7 +67,7 @@ class RequestManager
      *
      * @return mixed
      */
-    protected function get(string $uri, array $params = [], array $headers = [])
+    public function get(string $uri, array $params = [], array $headers = [])
     {
         return $this->getHttpClientBuilder()->getHttpClient()->get(
             self::prepareUri($uri, $params),
