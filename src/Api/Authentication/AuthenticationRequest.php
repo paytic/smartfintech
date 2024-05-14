@@ -3,10 +3,13 @@
 namespace Paytic\Smartfintech\Api\Authentication;
 
 use Paytic\Smartfintech\Api\AbstractBase\AbstractRequest;
+use Paytic\Smartfintech\Api\AbstractBase\Behaviours\RequestHasClientId;
 use Paytic\Smartfintech\HttpClient\RequestManager;
 
 class AuthenticationRequest extends AbstractRequest
 {
+    use RequestHasClientId;
+
     public const PATH = '/authenticate/rest/api/token';
 
     public const METHOD = 'POST';
@@ -14,8 +17,6 @@ class AuthenticationRequest extends AbstractRequest
     public string $certificate;
 
     public string $private_key;
-
-    public string $client_id;
 
     public ?bool $isLink2Pay = null;
 

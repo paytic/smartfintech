@@ -3,6 +3,7 @@
 namespace Paytic\Smartfintech\Api\Client;
 
 use Paytic\Smartfintech\Api\AbstractBase\AbstractRequest;
+use Paytic\Smartfintech\Api\AbstractBase\Behaviours\RequestHasClientId;
 use Paytic\Smartfintech\Api\AbstractBase\Behaviours\RequestHasContract;
 use Paytic\Smartfintech\HttpClient\RequestManager;
 use Paytic\Smartfintech\Models\Contract;
@@ -10,6 +11,7 @@ use Paytic\Smartfintech\Models\Contract;
 class ClientActivationRequest extends AbstractRequest
 {
     use RequestHasContract;
+    use RequestHasClientId;
 
     public const PATH = '/core/rest/api/clientActivation';
 
@@ -17,6 +19,7 @@ class ClientActivationRequest extends AbstractRequest
     protected static function createValidateParams(array $params = []): void
     {
         parent::createValidateParams($params);
+        self::validateParamClientId($params);
         self::validateParamContract($params);
     }
 
@@ -59,6 +62,7 @@ class ClientActivationRequest extends AbstractRequest
     {
         $headers = parent::getHeaders();
         $headers['Content-Type'] = 'application/json';
+        $headers['clientId'] = $this->getClientId();
         return $headers;
     }
 }

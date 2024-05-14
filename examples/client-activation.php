@@ -21,7 +21,7 @@ $response = $client->authenticate($request);
 $contractData = $_POST['contract'] ?? ContractsFactory::createFullData();
 $contract = Contract::create($contractData);
 $request = ClientActivationRequest::create([
-    'platform' => '42km',
+    'client_id' => '42km',
     'contract' => $contract,
 ]);
 

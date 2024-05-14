@@ -15,7 +15,7 @@ class ContractsFactory
     {
         return [
             'name' => 'Yolo Events',
-            'cifCnp' => 'RO123456789',
+            'cifCnp' => 'RO123456779',
             'tradeRegisterNumber' => 'J40/1234/2021',
             'officeAddress' => 'Bd. Eroilor 1',
             'county' => 'Bucuresti',
